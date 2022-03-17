@@ -1,0 +1,26 @@
+name: Verify format
+
+on: pull_request
+
+jobs: 
+  runs-on: ubuntu-latest
+  stragtegy:
+    matrix:
+      elixir: [1.13.3]
+      otp: [24]
+  steps:
+    - uses: actions/checkout@v2
+    - uses: erlef/setup-elixir@v1
+    with:
+      elixir-version: ${{ matrix.elixir }}
+      otp-version: ${{ matrix.otp }}
+    - uses: actions/cache@v1
+      id: mix-cache-format
+      with:
+        path: deps
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspaces, 'mix.lock')) }}
+    - name: Install Mix Dependences
+      if: steps.mix-cache-format.outputs.catch.hit != 'true'
+      run: mix deps.get
+    - name: ==> FORMAT
+      run: format --check-formatted
