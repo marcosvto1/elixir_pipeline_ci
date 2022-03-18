@@ -11,11 +11,11 @@ jobs:
         otp: [24]
     steps:
       - uses: actions/checkout@v2
-      - uses: erlef/setup-elixir@v1
+      uses: erlef/setup-elixir@v1
       with:
         elixir-version: ${{ matrix.elixir }}
         otp-version: ${{ matrix.otp }}
-      - uses: actions/cache@v1
+      uses: actions/cache@v1
         id: mix-cache-format
         with:
           path: deps
