@@ -5,23 +5,17 @@ on: pull_request
 jobs: 
   check_format:
     runs-on: ubuntu-latest
+    name: "OTP Elixir"
     strategy:
       matrix:
-        elixir: [1.13.3]
-        otp: [24]
+      otp: ['24']
+      elixir: ['1.13.3']
     steps:
       - uses: actions/checkout@v2
-      - uses: erlef/setup-elixir@v1      
+      - uses: erlef/setup-beam@v1
       with:
-        elixir-version: ${{ matrix.elixir }}
-        otp-version: ${{ matrix.otp }}
-      - uses: actions/cache@v2
-        id: mix-cache-format
-        with:
-          path: deps
-          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-      - name: Install Mix Dependences
-        if: steps.mix-cache-format.outputs.cache-hit != 'true''
-        run: mix deps.get
-      - name: ===> FORMAT
-        run: mix format --check-formatted
+        - otp-version: ${{ matrix.otp }}
+        - elixir-version: ${{ matrix.elixir }}
+      - run: mix deps.get
+      - name: "FORMAT"
+      - run: mix format --check-formatted
