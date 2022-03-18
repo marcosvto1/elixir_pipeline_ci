@@ -1,0 +1,22 @@
+name: Verify format
+
+on: pull_request
+
+jobs: 
+  check_format:
+    runs-on: ubuntu-latest
+    name: "OTP Elixir"
+    strategy:
+      matrix:
+        otp: ['24']
+        elixir: ['1.13.3']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - name: Install Mix Dependencies
+        run: mix deps.get
+      - name: "FORMAT"
+        run: mix format --check-formatted
