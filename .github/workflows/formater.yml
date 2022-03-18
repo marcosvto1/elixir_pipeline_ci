@@ -8,14 +8,14 @@ jobs:
     name: "OTP Elixir"
     strategy:
       matrix:
-      otp: ['24']
-      elixir: ['1.13.3']
+        otp: ['24']
+        elixir: ['1.13.3']
     steps:
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
-      with:
-        - otp-version: ${{ matrix.otp }}
-        - elixir-version: ${{ matrix.elixir }}
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
       - run: mix deps.get
       - name: "FORMAT"
       - run: mix format --check-formatted
